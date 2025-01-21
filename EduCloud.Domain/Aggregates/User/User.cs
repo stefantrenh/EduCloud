@@ -29,6 +29,12 @@ namespace EduCloud.Domain.Aggregates.User
             return new User(fullName, emailVO, password, DateTime.UtcNow);
         }
 
+        public static User CreateFromFullnameAndEmail(string fullName, string email)
+        {
+            var emailVO = Email.Create(email);
+            return new User(fullName, emailVO, string.Empty, DateTime.UtcNow);
+        }
+
         public static User Rehydrate(
             Guid userId,
             string fullName,

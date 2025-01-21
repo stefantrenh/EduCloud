@@ -7,5 +7,6 @@
         Task<User?> GetByEmailAsync(string email);
         Task UpdateAsync(User user);
         Task DeleteAsync(Guid userId);
+        Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }

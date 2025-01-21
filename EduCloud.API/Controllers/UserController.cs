@@ -23,11 +23,20 @@ namespace EduCloud.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById([FromQuery] GetUserQuery getUserQuery)
         { 
             var reponse = await _mediator.Send(getUserQuery);
             return Ok(reponse);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var query = new GetAllUsersQuery();
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
         }
 
         [HttpPut]

@@ -1,4 +1,5 @@
-﻿using EduCloud.Domain.Aggregates.User;
+﻿using EduCloud.Application.DTO.UserDTO;
+using EduCloud.Domain.Aggregates.User;
 using EduCloud.Domain.Aggregates.User.Interfaces;
 using EduCloud.Domain.Aggregates.User.ValueObjects;
 using EduCloud.Infrastructure.Constants;
@@ -97,6 +98,18 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
             };
 
             await ExecuteAsync(sql, parameters);
+        }
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            const string sql = "SELECT Fullname, Email FROM Users";
+            var userDtos = await QueryAsync<UserDTO>(sql);
+
+            var userList = userDtos.Select(dto =>
+            {
+                return User.CreateFromFullnameAndEmail(dto.Fullname, dto.Email);
+            }).ToList();
+
+            return userList ?? Enumerable.Empty<User>();
         }
 
         private class UserDto

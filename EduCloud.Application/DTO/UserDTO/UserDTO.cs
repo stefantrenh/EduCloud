@@ -2,6 +2,6 @@
 namespace EduCloud.Application.DTO.UserDTO
 {
     public record class UserDTO(
-        string fullname,
-        string email);
+        string Fullname,
+        string Email);
 }
