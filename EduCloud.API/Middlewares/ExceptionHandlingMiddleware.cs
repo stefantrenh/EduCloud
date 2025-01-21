@@ -1,4 +1,5 @@
-﻿using EduCloud.API.Common.Exceptions;
+﻿using EduCloud.API.Common.ApiResponse;
+using EduCloud.API.Common.Exceptions;
 using EduCloud.Application.Common.Exceptions;
 using System.Net;
 
@@ -28,6 +29,7 @@ namespace EduCloud.API.Middlewares
                 _logger.LogError(ex, "An unhandled exception occurred.");
 
                 context.Response.ContentType = "application/json";
+
                 context.Response.StatusCode = ex switch
                 {
                     ConflictException => (int)HttpStatusCode.Conflict,
@@ -36,18 +38,19 @@ namespace EduCloud.API.Middlewares
                     _ => (int)HttpStatusCode.InternalServerError
                 };
 
-                var errorResponse = new
+                var errorResponse = new ApiResponse<object>(
+                    context.Response.StatusCode,
+                    ex.Message,
+                    data: null 
+                );
+
+                if (_environment.IsDevelopment())
                 {
-                    statusCode = context.Response.StatusCode,
-                    message = ex.Message,
-                    errorCode = ex.GetType().Name.ToUpper(),
-                    stackTrace = _environment.IsDevelopment() ? ex.StackTrace : null
-                };
+                    errorResponse.Data = new { ex.StackTrace };
+                }
 
                 await context.Response.WriteAsJsonAsync(errorResponse);
             }
         }
     }
-
-
 }

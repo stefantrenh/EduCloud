@@ -1,4 +1,5 @@
 ﻿using EduCloud.Application.Users.Commands;
+using EduCloud.Application.Users.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,13 @@ namespace EduCloud.API.Controllers
         { 
             var response = await _mediator.Send(command);
             return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserById([FromQuery] GetUserQuery getUserQuery)
+        { 
+            var reponse = await _mediator.Send(getUserQuery);
+            return Ok(reponse);
         }
     }
 }

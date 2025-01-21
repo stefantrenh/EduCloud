@@ -29,6 +29,25 @@ namespace EduCloud.Domain.Aggregates.User
             return new User(fullName, emailVO, password, DateTime.UtcNow);
         }
 
+        public static User Rehydrate(
+            string fullName,
+            Email email,
+            List<UserRole> roles,
+            string? passwordHash,
+            DateTime createdDate)
+        {
+            var user = new User
+            {
+                Fullname = fullName,
+                Email = email,
+                Roles = roles ?? new List<UserRole>(),
+                PasswordHash = passwordHash ?? string.Empty,
+                CreatedDate = createdDate
+            };
+
+            return user;
+        }
+
         public void AddRole(UserRole role)
         {
             if (Roles.Contains(role))

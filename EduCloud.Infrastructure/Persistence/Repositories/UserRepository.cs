@@ -36,7 +36,7 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            const string sql = $"SELECT Id, Fullname, Email, PasswordHash, CreatedDate FROM {TableNames.Users} WHERE Email = @Email";
+            const string sql = $"SELECT Id, Fullname, Email, CreatedDate FROM {TableNames.Users} WHERE Email = @Email";
 
             var result = await QueryFirstOrDefaultAsync<dynamic>(sql, new { Email = email });
 
@@ -51,10 +51,26 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByIdAsync(Guid userId)
         {
-            const string sql = $"SELECT Id, Fullname, Email " +
-                               $"FROM {TableNames.Users} WHERE Id = @Id";
+            const string sql = @"SELECT Id, Fullname, Email, CreatedDate 
+                         FROM Users 
+                         WHERE Id = @Id";
 
-            return await QueryFirstOrDefaultAsync<User>(sql, new { Id = userId });
+            var result = await QueryFirstOrDefaultAsync<dynamic>(sql, new { Id = userId });
+
+            if (result == null)
+                return null;
+
+            var emailVO = Email.Create(result.Email);
+
+            var roles = new List<UserRole>();
+
+            return User.Rehydrate(
+                result.Fullname,
+                emailVO,
+                roles,
+                null,
+                result.CreatedDate
+            );
         }
 
         public async Task UpdateAsync(User user)
