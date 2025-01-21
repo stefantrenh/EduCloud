@@ -1,4 +1,5 @@
-﻿using EduCloud.Domain.Aggregates.User;
+﻿using EduCloud.Application.Common.Exceptions;
+using EduCloud.Domain.Aggregates.User;
 using EduCloud.Domain.Aggregates.User.Interfaces;
 using MediatR;
 
@@ -19,7 +20,7 @@ namespace EduCloud.Application.Users.Commands
 
             if (existingUser is not null)
             {
-                throw new InvalidOperationException("User email already exists.");
+                throw new ConflictException("User email already exists.");
             }
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
