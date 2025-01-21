@@ -10,7 +10,8 @@ namespace EduCloud.Application.Users.Commands
 {
     public record UpdateUserCommand(
         Guid UserId,
-        List<UserRole> UserRoles,
+        //List<UserRole> UserRoles,
         string FirstName,
-        string LastName) : IRequest<UpdateUserResponse>;
+        string LastName,
+        string Email) : IRequest<UpdateUserResponse>;
 }

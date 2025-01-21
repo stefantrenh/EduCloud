@@ -12,19 +12,52 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
             _dbConnection = dbConnection;
         }
 
-        protected async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object parameters = null)
+        private void OpenConnectionIfNeeded()
         {
-            return await _dbConnection.QueryFirstOrDefaultAsync<T>(sql, parameters);
+            if (_dbConnection.State == ConnectionState.Closed)
+            {
+                _dbConnection.Open();
+            }
         }
 
-        protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, object parameters = null)
+        protected IDbTransaction BeginTransaction()
         {
-            return await _dbConnection.QueryAsync<T>(sql, parameters);
+            OpenConnectionIfNeeded();
+            return _dbConnection.BeginTransaction();
         }
 
-        protected async Task ExecuteAsync(string sql, object parameters = null)
+        protected async Task<T> QueryFirstOrDefaultAsync<T>(string sql, object parameters = null, IDbTransaction transaction = null)
         {
-            await _dbConnection.ExecuteAsync(sql, parameters);
+            OpenConnectionIfNeeded();
+            return await _dbConnection.QueryFirstOrDefaultAsync<T>(sql, parameters, transaction);
+        }
+
+        protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, object parameters = null, IDbTransaction transaction = null)
+        {
+            OpenConnectionIfNeeded();
+            return await _dbConnection.QueryAsync<T>(sql, parameters, transaction);
+        }
+
+        protected async Task ExecuteAsync(string sql, object parameters = null, IDbTransaction transaction = null)
+        {
+            OpenConnectionIfNeeded();
+            await _dbConnection.ExecuteAsync(sql, parameters, transaction);
+        }
+
+        protected async Task<int> ExecuteAndReturnAffectedRowsAsync(string sql, object parameters = null, IDbTransaction transaction = null)
+        {
+            OpenConnectionIfNeeded();
+            return await _dbConnection.ExecuteAsync(sql, parameters, transaction);
+        }
+
+        protected async Task CommitTransactionAsync(IDbTransaction transaction)
+        {
+            await Task.Run(() => transaction.Commit());
+        }
+
+        protected async Task RollbackTransactionAsync(IDbTransaction transaction)
+        {
+            await Task.Run(() => transaction.Rollback());
         }
     }
 }

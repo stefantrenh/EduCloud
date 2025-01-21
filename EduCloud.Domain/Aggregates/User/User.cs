@@ -30,6 +30,7 @@ namespace EduCloud.Domain.Aggregates.User
         }
 
         public static User Rehydrate(
+            Guid userId,
             string fullName,
             Email email,
             List<UserRole> roles,
@@ -38,6 +39,7 @@ namespace EduCloud.Domain.Aggregates.User
         {
             var user = new User
             {
+                Id = userId,
                 Fullname = fullName,
                 Email = email,
                 Roles = roles ?? new List<UserRole>(),
@@ -54,6 +56,15 @@ namespace EduCloud.Domain.Aggregates.User
                 throw new InvalidOperationException("Role already assigned.");
 
             Roles.Add(role);
+            UpdatedDateStamp();
+        }
+
+        public void ChangeFullname(string newFullname)
+        {
+            if (string.IsNullOrWhiteSpace(newFullname))
+                throw new ArgumentException("Fullname cannot be empty or whitespace.", nameof(newFullname));
+
+            Fullname = newFullname;
             UpdatedDateStamp();
         }
 

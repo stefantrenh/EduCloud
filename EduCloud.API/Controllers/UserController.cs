@@ -29,5 +29,12 @@ namespace EduCloud.API.Controllers
             var reponse = await _mediator.Send(getUserQuery);
             return Ok(reponse);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserCommand command)
+        { 
+            var response = await _mediator.Send(command);
+            return Ok(response);     
+        }
     }
 }
