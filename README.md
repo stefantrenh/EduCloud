@@ -9,8 +9,8 @@ MediatR for in-process messaging, and two ORM libraries: Dapper and Entity Frame
 
 ## Table of Contents
 
-1. [Clean Architecture](#clean-architecture)
-2. [DDD Implementation](#ddd-implementation)
-3. [CQRS with MediatR](#cqrs-with-mediator)
-4. [Using Dapper ORM](#using-dapper-orm)
-5. [Using EF Core for Code-First Development](#using-ef-core-for-code-first-development)
+1. [Clean Architecture]
+2. [DDD Implementation]
+3. [CQRS with MediatR]
+4. [Using Dapper ORM]
+5. [Using EF Core for Code-First Development]
