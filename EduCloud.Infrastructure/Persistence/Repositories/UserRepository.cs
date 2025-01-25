@@ -62,7 +62,7 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByIdAsync(Guid userId)
         {
-            const string sql = @"SELECT Id, Fullname, Email, UsersStatus, CreatedDate 
+            const string sql = @"SELECT Id, Fullname, Email, UserStatus, CreatedDate 
                                  FROM Users 
                                  WHERE Id = @Id";
 
@@ -92,7 +92,7 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
         }
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            const string sql = "SELECT Id, Fullname, Email, UsersStatus, CreatedDate FROM Users";
+            const string sql = "SELECT Id, Fullname, Email, UserStatus, CreatedDate FROM Users";
             var userDtos = await QueryAsync<UserDto>(sql);
 
             var userList = userDtos.Select(dto =>

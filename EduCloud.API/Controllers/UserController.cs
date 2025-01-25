@@ -24,10 +24,10 @@ namespace EduCloud.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById([FromQuery] GetUserQuery getUserQuery)
-        { 
-            var reponse = await _mediator.Send(getUserQuery);
-            return Ok(reponse);
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            var response = await _mediator.Send(new GetUserQuery(id));
+            return Ok(response);
         }
 
         [HttpGet]
