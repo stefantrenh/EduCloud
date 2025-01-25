@@ -1,4 +1,6 @@
-﻿namespace EduCloud.Domain.Aggregates.User.ValueObjects
+﻿using System.Text.RegularExpressions;
+
+namespace EduCloud.Domain.Aggregates.User.ValueObjects
 {
     public class Email
     {
@@ -17,7 +19,9 @@
 
         private bool IsValidEmail(string email)
         {
-            return email.Contains("@");
+            //validates a-ö, 2 char before and 3 after 
+            string emailRegex = @"^[\w\.\-åäöüÅÄÖÜ]{2,}@[a-zA-Z0-9\-åäöüÅÄÖÜ]{3,}\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(email, emailRegex);
         }
 
         public static Email Create(string address) 
