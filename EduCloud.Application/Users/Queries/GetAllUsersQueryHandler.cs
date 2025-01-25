@@ -1,5 +1,4 @@
-﻿using EduCloud.Application.DTO.UserDTO;
-using EduCloud.Domain.Aggregates.User.Interfaces;
+﻿using EduCloud.Domain.Aggregates.User.Interfaces;
 using MediatR;
 
 namespace EduCloud.Application.Users.Queries

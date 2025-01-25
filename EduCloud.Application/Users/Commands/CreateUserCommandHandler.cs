@@ -1,6 +1,5 @@
 ﻿using EduCloud.Application.Common.Exceptions;
 using EduCloud.Domain.Aggregates.User;
-using EduCloud.Domain.Aggregates.User.Enums;
 using EduCloud.Domain.Aggregates.User.Interfaces;
 using MediatR;
 

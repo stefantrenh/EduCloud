@@ -79,6 +79,19 @@ namespace EduCloud.Test.UnitTest.UserTests
         }
     }
 
+    public class SoftDeleteUserTest : UserDomainTest
+    {
+        [Fact]
+        public void ShouldBeInActive()
+        {
+            var result = User.Create(fullName, email.Address, password);
+
+            result.DeleteUser();
+
+            result.UserStatus.Should().Be(UserStatus.Inactive);
+        }
+    }
+
     public class RehydrateUserShouldReturnValidData : UserDomainTest
     {
         [Fact]

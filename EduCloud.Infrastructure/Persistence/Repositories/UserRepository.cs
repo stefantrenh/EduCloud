@@ -77,14 +77,15 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
 
         public async Task UpdateAsync(User user)
         {
-            const string sql = $"UPDATE {TableNames.Users} " +
-                               $"SET Fullname = @Fullname, Email = @Email " +
+            const string sql = $"UPDATE {TableNames.Users} " + 
+                               $"SET Fullname = @Fullname, Email = @Email, UserStatus = @UserStatus " +
                                $"WHERE Id = @Id";
 
             var parameters = new
             {
                 Fullname = user.Fullname,
                 Email = user.Email?.Address,
+                UserStatus = (int)user.UserStatus,
                 Id = user.Id
             };
 

@@ -18,7 +18,7 @@ namespace EduCloud.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command)
-        { 
+        {
             var response = await _mediator.Send(command);
             return Ok(response);
         }
@@ -41,9 +41,16 @@ namespace EduCloud.API.Controllers
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserCommand command)
-        { 
+        {
             var response = await _mediator.Send(command);
-            return Ok(response);     
+            return Ok(response);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            var response = await _mediator.Send(new DeleteUserCommand(id));
+            return Ok(response);
         }
     }
 }
