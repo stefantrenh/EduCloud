@@ -1,4 +1,5 @@
 ﻿using EduCloud.Domain.Aggregates.User;
+using EduCloud.Domain.Aggregates.User.Enums;
 using EduCloud.Domain.Aggregates.User.ValueObjects;
 using FluentAssertions;
 using Xunit;
@@ -12,6 +13,7 @@ namespace EduCloud.Test.UnitTest.UserTests
         protected Email email;
         protected string password;
         protected DateTime createdDate;
+        protected UserStatus status;
         protected List<UserRole> roles;
         public UserDomainTest()
         {
@@ -20,6 +22,7 @@ namespace EduCloud.Test.UnitTest.UserTests
             password = "password"; //no passwordvalidation yet
             createdDate = DateTime.UtcNow;
             roles = new List<UserRole>();
+            status = UserStatus.Active;
         }
     }
 
@@ -87,12 +90,14 @@ namespace EduCloud.Test.UnitTest.UserTests
                 email,
                 roles,
                 "",
+                status,
                 createdDate);
 
             user.Fullname.Should().Be(fullName);
             user.Email.Should().Be(email);
             user.Roles.Should().BeEquivalentTo(roles);
             user.PasswordHash.Should().Be("");
+            user.UserStatus.Should().Be(UserStatus.Active);
             user.CreatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
             
         }

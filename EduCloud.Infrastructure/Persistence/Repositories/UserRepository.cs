@@ -1,7 +1,7 @@
-﻿using EduCloud.Application.DTO.UserDTO;
-using EduCloud.Domain.Aggregates.User;
+﻿using EduCloud.Domain.Aggregates.User;
 using EduCloud.Domain.Aggregates.User.Interfaces;
 using EduCloud.Domain.Aggregates.User.ValueObjects;
+using EduCloud.Domain.Aggregates.User.Enums;
 using EduCloud.Infrastructure.Constants;
 using System.Data;
 
@@ -13,6 +13,8 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
         {
         }
 
+        //TODO: User Role
+  
         public async Task AddAsync(User user)
         {
             const string sql = $"INSERT INTO {TableNames.Users} (Id, Fullname, Email, PasswordHash, CreatedDate) " +
@@ -41,7 +43,7 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            const string sql = $"SELECT Id, Fullname, Email, PasswordHash, CreatedDate " +
+            const string sql = $"SELECT Id, Fullname, Email, UsersStatus, CreatedDate " +
                                $"FROM {TableNames.Users} WHERE Email = @Email";
 
             var parameters = new { Email = email };
@@ -51,17 +53,13 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
                 return null;
 
             var emailVO = Email.Create(result.Email);
-            return new User(
-                result.Fullname,
-                emailVO,
-                result.PasswordHash,
-                result.CreatedDate
-            );
+
+            return MapRehydrateUserData(result);
         }
 
         public async Task<User?> GetByIdAsync(Guid userId)
         {
-            const string sql = @"SELECT Id, Fullname, Email, PasswordHash, CreatedDate 
+            const string sql = @"SELECT Id, Fullname, Email, UsersStatus, CreatedDate 
                                  FROM Users 
                                  WHERE Id = @Id";
 
@@ -71,17 +69,7 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
             if (result == null)
                 return null;
 
-            var emailVO = Email.Create(result.Email);
-            var roles = new List<UserRole>(); 
-
-            return User.Rehydrate(
-                result.Id,
-                result.Fullname,
-                emailVO,
-                roles,
-                result.PasswordHash,
-                result.CreatedDate
-            );
+            return MapRehydrateUserData(result);
         }
 
         public async Task UpdateAsync(User user)
@@ -101,15 +89,32 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
         }
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            const string sql = "SELECT Fullname, Email FROM Users";
-            var userDtos = await QueryAsync<UserDTO>(sql);
+            const string sql = "SELECT Id, Fullname, Email, UsersStatus, CreatedDate FROM Users";
+            var userDtos = await QueryAsync<UserDto>(sql);
 
             var userList = userDtos.Select(dto =>
-            {
-                return User.CreateFromFullnameAndEmail(dto.Fullname, dto.Email);
+            {        
+                return MapRehydrateUserData(dto);
             }).ToList();
 
             return userList ?? Enumerable.Empty<User>();
+        }
+
+        private User MapRehydrateUserData(UserDto dto)
+        {
+
+            var emailVO = Email.Create(dto.Email);
+            var userStatus = (UserStatus)dto.UsersStatus;
+
+            return User.Rehydrate(
+                dto.Id,
+                dto.Fullname,
+                emailVO,
+                new List<UserRole>(),
+                "",
+                userStatus,
+                dto.CreatedDate
+            );
         }
 
         private class UserDto
@@ -118,6 +123,7 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
             public string Fullname { get; set; }
             public string Email { get; set; }
             public string PasswordHash { get; set; }
+            public int UsersStatus { get; set; }
             public DateTime CreatedDate { get; set; }
         }
     }
