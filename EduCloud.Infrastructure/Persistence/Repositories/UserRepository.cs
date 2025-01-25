@@ -14,11 +14,11 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
         }
 
         //TODO: User Role
-  
+
         public async Task AddAsync(User user)
         {
-            const string sql = $"INSERT INTO {TableNames.Users} (Id, Fullname, Email, PasswordHash, CreatedDate) " +
-                               "VALUES (@Id, @Fullname, @Email, @PasswordHash, @CreatedDate)";
+            const string sql = $"INSERT INTO {TableNames.Users} (Id, Fullname, Email, PasswordHash, UserStatus, CreatedDate) " +
+                               "VALUES (@Id, @Fullname, @Email, @PasswordHash, @UserStatus, @CreatedDate)";
 
             var parameters = new
             {
@@ -26,11 +26,14 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
                 user.Fullname,
                 Email = user.Email.Address,
                 user.PasswordHash,
+                UserStatus = (int)user.UserStatus,
                 user.CreatedDate
             };
 
             await ExecuteAsync(sql, parameters);
         }
+
+
 
         public async Task DeleteAsync(Guid userId)
         {
@@ -43,7 +46,7 @@ namespace EduCloud.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            const string sql = $"SELECT Id, Fullname, Email, UsersStatus, CreatedDate " +
+            const string sql = $"SELECT Id, Fullname, Email, UserStatus, CreatedDate " +
                                $"FROM {TableNames.Users} WHERE Email = @Email";
 
             var parameters = new { Email = email };

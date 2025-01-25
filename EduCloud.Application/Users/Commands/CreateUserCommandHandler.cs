@@ -1,5 +1,6 @@
 ﻿using EduCloud.Application.Common.Exceptions;
 using EduCloud.Domain.Aggregates.User;
+using EduCloud.Domain.Aggregates.User.Enums;
 using EduCloud.Domain.Aggregates.User.Interfaces;
 using MediatR;
 
@@ -25,7 +26,7 @@ namespace EduCloud.Application.Users.Commands
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            var user = User.Create($"{request.FirstName} {request.LastName}", request.Email, hashedPassword);
+            var user = User.Create($"{request.FirstName} {request.LastName}", request.Email,hashedPassword);
 
             await _userRepository.AddAsync(user);
 

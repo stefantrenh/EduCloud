@@ -19,7 +19,7 @@ namespace EduCloud.Test.UnitTest.UserTests
         {
             fullName = "Jörgen Rönning";
             email = Email.Create("Jörgenrönning@testmail.com");
-            password = "password"; //no passwordvalidation yet
+            password = "password"; //no passwordvalidation yet 
             createdDate = DateTime.UtcNow;
             roles = new List<UserRole>();
             status = UserStatus.Active;
